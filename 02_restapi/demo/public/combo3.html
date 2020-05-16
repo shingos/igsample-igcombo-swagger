@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <title>IgniteUI - igCombo</title>
+
+  <script src="./modernizr-custom.js"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<!-- Metro UI -->
+	<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+
+  <!-- Infragistics -->
+	<link href="https://cdn-na.infragistics.com/igniteui/latest/css/themes/metro/infragistics.theme.css" rel="stylesheet">
+	<link href="https://cdn-na.infragistics.com/igniteui/latest/css/structure/infragistics.css" rel="stylesheet">
+	<script src="https://cdn-na.infragistics.com/igniteui/latest/js/i18n/infragistics-ja.js"></script>
+	<script src="https://cdn-na.infragistics.com/igniteui/latest/js/infragistics.core.js"></script>
+	<script src="https://cdn-na.infragistics.com/igniteui/latest/js/infragistics.lob.js"></script>
+	<script src="https://cdn-na.infragistics.com/igniteui/latest/js/modules/i18n/regional/infragistics.ui.regional-ja.js"></script>
+
+  <style></style>
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="text-center">igCombo + Swagger/Lumen/MySQL</h1>
+		<h3 class="text-center">(Remote filter / more than 2 chars)</h3>
+	</div>
+	
+	<div class="container">
+		<input id="combo" />
+	</div>
+
+<script>
+
+$(document).ready(function () {
+	var $combo = $("#combo");
+
+	$combo.igCombo({
+		// *******
+		dataSourceUrl: "/api/fulltext",
+		dataSourceType: "json",
+		filteringType : 'remote',
+		filterExprUrlKey: "$filter",
+		filteringCondition: "",
+		locale: {
+			placeHolder: "文字を入力して検索",
+			noMatchFoundText: "2文字以上入力してください"
+		},
+		filtering: function (evt, ui) {
+      if (!!ui.expression && !!ui.expression[0] && ui.expression[0].expr.length >= 2) {
+				$combo.igCombo("option", "locale", {
+					placeHolder: "選択してください",
+					noMatchFoundText: "\"" + ui.expression[0].expr + "\" に該当する候補がありません"
+				});
+			}
+			else {
+				$combo.igCombo("option", "locale", {
+					placeHolder: "文字を入力して検索",
+					noMatchFoundText: "2文字以上入力してください"
+				});
+			}
+    },
+    virtualization: true,
+		// *******
+		textKey: "text",
+		valueKey: "id",
+		itemTemplate: "(${id}) ${text}",
+    virtualization: true,
+		width: "100%"
+	});
+});
+
+</script>
+
+</html>

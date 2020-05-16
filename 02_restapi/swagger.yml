@@ -1,0 +1,167 @@
+swagger: "2.0"
+info:
+  version: 0.0.1
+  title: igCombo Demo
+  description: >-
+    igCombo デモ用 REST API
+
+schemes:
+  - http
+host: "localhost:8000"
+basePath: "/api"
+
+paths:
+
+  /samples:
+    get:
+      summary: サンプルデータ取得
+      description: サンプルデータ一覧を取得します。
+      tags:
+        - "combo1"
+      operationId: getSamples
+      parameters:
+        - in: query
+          name: "$skip"
+          type: integer
+          format: int32
+          description: Offset
+        - in: query
+          name: "$top"
+          type: integer
+          format: int32
+          description: Limit
+      responses:
+        "200":
+          description: サンプルデータの応答
+          schema:
+            type: object
+            description: 著者
+            properties:
+              count:
+                type: integer
+                format: int32
+                description: 件数
+              results:
+                type: array
+                items:
+                  $ref: "#/definitions/SamplesItem"
+
+  /authors:
+    get:
+      summary: 著者取得
+      description: 著者一覧を取得します。
+      tags:
+        - "combo2"
+      operationId: getAuthors
+      responses:
+        "200":
+          description: 著者一覧の応答
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/AuthorsItem"
+
+  /{author}/titles:
+    get:
+      summary: 作品名取得
+      description: 作品名一覧を取得します。
+      tags:
+        - "combo2"
+      operationId: getTitles
+      parameters:
+        - in: path
+          name: author
+          type: string
+          required: true
+      responses:
+        "200":
+          description: 作品名一覧の応答
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/TitlesItem"
+
+  /{author}/{title}/text:
+    get:
+      summary: サンプルデータ取得
+      description: サンプルデータ一覧を取得します。
+      tags:
+        - "combo2"
+      operationId: getTextByTitle
+      parameters:
+        - in: path
+          name: author
+          type: string
+          required: true
+        - in: path
+          name: title
+          type: string
+          required: true
+      responses:
+        "200":
+          description: サンプルデータの応答
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SamplesItem"
+
+  /fulltext:
+    get:
+      summary: サンプルデータ取得
+      description: サンプルデータ一覧を取得します。
+      tags:
+        - "combo3"
+      operationId: getFulltext
+      parameters:
+        - in: query
+          name: "$filter(text)"
+          type: string
+          required: false
+      responses:
+        "200":
+          description: サンプルデータの応答
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SamplesItem"
+
+definitions:
+
+  AuthorsItem:
+    type: object
+    description: 著者
+    properties:
+      author:
+        type: string
+        description: 著者
+
+  TitlesItem:
+    type: object
+    description: 作品名
+    properties:
+      author:
+        type: string
+        description: 著者
+      title:
+        type: string
+        description: 作品名
+
+  SamplesItem:
+    type: object
+    description: サンプルデータ構造
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: 通し番号
+      author:
+        type: string
+        description: 著者
+      title:
+        type: string
+        description: 作品名
+      text:
+        type: string
+        description: 文章
+    required:
+      - id
